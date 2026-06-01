@@ -1,0 +1,14 @@
+[package]
+name = "dltui-viewer"
+description = "This is the dltui-viewer application"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+clap = { version = "4.6.6", features = ["derive"] }
+dltui-viewer-serde = { version = "0.1.0", path = "../dltui-viewer-serde" }

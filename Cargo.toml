@@ -1,0 +1,28 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/dltui-viewer",
+    "crates/dltui-viewer-core",
+    "crates/dltui-viewer-tui",
+    "crates/dltui-viewer-net",
+    "crates/dltui-viewer-parser",
+    "crates/dltui-viewer-serde",
+]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Thomas BRUNEL <thomas.brunel2@icloud.com>"]
+license = "MIT"
+edition = "2024"
+rust-version = "1.96"
+keywords = ["cli", "tui", "dlt", "automotive", "log"]
+categories = ["command-line-utilities", "automotive-diagnostics"]
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

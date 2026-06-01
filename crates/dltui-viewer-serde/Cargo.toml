@@ -1,0 +1,16 @@
+[package]
+name = "dltui-viewer-serde"
+description = "Serialize and Deserialize DLT Project file"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+xmltree = "0.12.0"
+
+[lints]
+workspace = true
