@@ -1,4 +1,7 @@
-use crate::{dlt_context::DltContext, get_value, try_get_value};
+use crate::{
+    DlpSerde, deserialize_children, dlt_context::DltContext, get_value, serialize_children,
+    to_value, try_get_value, try_to_value,
+};
 
 #[derive(Debug)]
 pub struct DltApplication {
@@ -7,23 +10,26 @@ pub struct DltApplication {
     contexts: Vec<DltContext>,
 }
 
-impl DltApplication {
-    pub(crate) fn deserialize(
-        xml_application: &mut xmltree::Element,
-    ) -> Result<Self, crate::Error> {
+impl DlpSerde for DltApplication {
+    fn deserialize(xml_application: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let id = get_value(xml_application, "id")?;
         let description = try_get_value(xml_application, "description")?;
-
-        let mut contexts = Vec::new();
-        while let Some(xml_context) = xml_application.take_child("context") {
-            let dlt_context = DltContext::deserialize(&xml_context)?;
-            contexts.push(dlt_context);
-        }
+        let contexts = deserialize_children(xml_application, "context")?;
 
         Ok(Self {
             id,
             description,
             contexts,
         })
+    }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_application = xmltree::Element::new("application");
+
+        to_value(&mut xml_application, "id", &self.id);
+        try_to_value(&mut xml_application, "description", &self.description);
+        serialize_children(&mut xml_application, &self.contexts);
+
+        xml_application
     }
 }

@@ -1,4 +1,4 @@
-use crate::{get_value, try_get_value, value_as, value_as_bool};
+use crate::{DlpSerde, get_value, try_get_value, value_as, value_as_bool};
 
 #[derive(Debug)]
 pub struct DltFilter {
@@ -36,8 +36,8 @@ pub struct DltFilter {
     log_level_min: u8,
 }
 
-impl DltFilter {
-    pub(crate) fn deserialize(xml_filter: &xmltree::Element) -> Result<Self, crate::Error> {
+impl DlpSerde for DltFilter {
+    fn deserialize(xml_filter: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let filter_type = value_as(xml_filter, "type")?;
         let name = get_value(xml_filter, "name")?;
         let ecu_id = try_get_value(xml_filter, "ecuid")?;
@@ -105,5 +105,92 @@ impl DltFilter {
             log_level_max,
             log_level_min,
         })
+    }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_filter = xmltree::Element::new("pfilter");
+
+        crate::to_value(&mut xml_filter, "type", &self.filter_type);
+        crate::to_value(&mut xml_filter, "name", &self.name);
+        crate::try_to_value(&mut xml_filter, "ecuid", &self.ecu_id);
+        crate::try_to_value(&mut xml_filter, "applicationid", &self.application_id);
+        crate::try_to_value(&mut xml_filter, "contextid", &self.context_id);
+        crate::try_to_value(&mut xml_filter, "headertext", &self.header_text);
+        crate::try_to_value(&mut xml_filter, "payloadtext", &self.payload_text);
+        crate::try_to_value(&mut xml_filter, "regex_search", &self.regex_search);
+        crate::try_to_value(&mut xml_filter, "regex_replace", &self.regex_replace);
+        crate::to_value(&mut xml_filter, "messageIdMin", &self.message_id_min);
+        crate::to_value(&mut xml_filter, "messageIdMax", &self.message_id_max);
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableregexp_Appid",
+            &self.enable_reg_exp_app_id,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableregexp_Context",
+            &self.enable_reg_exp_context,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableregexp_Header",
+            &self.enable_reg_exp_header,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableregexp_Payload",
+            &self.enable_reg_exp_payload,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "ignoreCase_Header",
+            &self.ignore_case_header,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "ignoreCase_Payload",
+            &self.ignore_case_payload,
+        );
+        crate::to_value_bool(&mut xml_filter, "enablefilter", &self.enable_filter);
+        crate::to_value_bool(&mut xml_filter, "enableecuid", &self.enable_ecu_id);
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableapplicationid",
+            &self.enable_application_id,
+        );
+        crate::to_value_bool(&mut xml_filter, "enablecontextid", &self.enable_context_id);
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableheadertext",
+            &self.enable_header_text,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enablepayloadtext",
+            &self.enable_payload_text,
+        );
+        crate::to_value_bool(&mut xml_filter, "enablectrlmsgs", &self.enable_ctrl_msgs);
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableLogLevelMin",
+            &self.enable_log_level_min,
+        );
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableLogLevelMax",
+            &self.enable_log_level_max,
+        );
+        crate::to_value_bool(&mut xml_filter, "enableMarker", &self.enable_marker);
+        crate::to_value_bool(&mut xml_filter, "enableMessageId", &self.enable_message_id);
+        crate::to_value_bool(
+            &mut xml_filter,
+            "enableRegexSearchReplace",
+            &self.enable_regex_search_replace,
+        );
+        crate::to_value(&mut xml_filter, "filterColour", &self.filter_colour);
+        crate::to_value(&mut xml_filter, "logLevelMax", &self.log_level_max);
+        crate::to_value(&mut xml_filter, "logLevelMin", &self.log_level_min);
+
+        xml_filter
     }
 }

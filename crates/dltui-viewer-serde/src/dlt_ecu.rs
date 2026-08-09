@@ -1,4 +1,7 @@
-use crate::{dlt_application::DltApplication, get_value, try_get_value, value_as, value_as_bool};
+use crate::{
+    DlpSerde, deserialize_children, dlt_application::DltApplication, get_value, serialize_children,
+    try_get_value, value_as, value_as_bool,
+};
 
 #[derive(Debug)]
 pub struct DltEcu {
@@ -31,8 +34,8 @@ pub struct DltEcu {
     applications: Vec<DltApplication>,
 }
 
-impl DltEcu {
-    pub(crate) fn deserialize(xml_ecu: &mut xmltree::Element) -> Result<Self, crate::Error> {
+impl DlpSerde for DltEcu {
+    fn deserialize(xml_ecu: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let id = get_value(xml_ecu, "id")?;
         let description = try_get_value(xml_ecu, "description")?;
         let interface = get_value(xml_ecu, "interface")?;
@@ -59,12 +62,7 @@ impl DltEcu {
         let auto_reconnect = value_as_bool(xml_ecu, "autoReconnect")?;
         let auto_reconnect_timeout = value_as(xml_ecu, "autoReconnectTimeout")?;
         let write_dltv2_storage_header = value_as_bool(xml_ecu, "writeDLTv2StorageHeader")?;
-
-        let mut applications = Vec::new();
-        while let Some(mut xml_application) = xml_ecu.take_child("application") {
-            let dlt_application = DltApplication::deserialize(&mut xml_application)?;
-            applications.push(dlt_application);
-        }
+        let applications = deserialize_children(xml_ecu, "application")?;
 
         Ok(Self {
             id,
@@ -95,5 +93,71 @@ impl DltEcu {
             write_dltv2_storage_header,
             applications,
         })
+    }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_ecu = xmltree::Element::new("ecu");
+
+        crate::to_value(&mut xml_ecu, "id", &self.id);
+        crate::try_to_value(&mut xml_ecu, "description", &self.description);
+        crate::to_value(&mut xml_ecu, "interface", &self.interface);
+        crate::try_to_value(&mut xml_ecu, "hostname", &self.hostname);
+        crate::try_to_value(&mut xml_ecu, "mcinterface", &self.mc_interface);
+        crate::to_value(&mut xml_ecu, "mcIP", &self.mc_ip);
+        crate::to_value(&mut xml_ecu, "ipport", &self.ip_port);
+        crate::to_value(&mut xml_ecu, "udpport", &self.udp_port);
+        crate::try_to_value(&mut xml_ecu, "port", &self.port);
+        crate::to_value(&mut xml_ecu, "baudrate", &self.baudrate);
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "sendserialheadertcp",
+            &self.send_serial_header_tcp,
+        );
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "sendserialheaderserial",
+            &self.send_serial_header_serial,
+        );
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "synctoserialheadertcp",
+            &self.sync_to_serial_header_tcp,
+        );
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "synctoserialheaderserial",
+            &self.sync_to_serial_header_serial,
+        );
+        crate::to_value(&mut xml_ecu, "loglevel", &self.log_level);
+        crate::to_value(&mut xml_ecu, "tracestatus", &self.trace_status);
+        crate::to_value_bool(&mut xml_ecu, "verbosemode", &self.verbose_mode);
+        crate::to_value(&mut xml_ecu, "timingpackets", &self.timing_packets);
+        crate::to_value_bool(&mut xml_ecu, "sendgetloginfo", &self.send_get_log_info);
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "sendDefaultLogLevel",
+            &self.send_default_log_level,
+        );
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "sendGetSoftwareVersion",
+            &self.send_get_software_version,
+        );
+        crate::to_value_bool(&mut xml_ecu, "updatedata", &self.update_data);
+        crate::to_value_bool(&mut xml_ecu, "multicast", &self.multicast);
+        crate::to_value_bool(&mut xml_ecu, "autoReconnect", &self.auto_reconnect);
+        crate::to_value(
+            &mut xml_ecu,
+            "autoReconnectTimeout",
+            &self.auto_reconnect_timeout,
+        );
+        crate::to_value_bool(
+            &mut xml_ecu,
+            "writeDLTv2StorageHeader",
+            &self.write_dltv2_storage_header,
+        );
+        serialize_children(&mut xml_ecu, &self.applications);
+
+        xml_ecu
     }
 }

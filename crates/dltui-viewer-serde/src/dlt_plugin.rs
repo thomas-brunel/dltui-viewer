@@ -1,4 +1,4 @@
-use crate::{get_value, try_get_value, value_as};
+use crate::{DlpSerde, get_value, to_value, try_get_value, try_to_value, value_as};
 
 #[derive(Debug)]
 pub struct DltPlugin {
@@ -9,8 +9,8 @@ pub struct DltPlugin {
     prio: u8,
 }
 
-impl DltPlugin {
-    pub(crate) fn deserialize(xml_plugin: &xmltree::Element) -> Result<Self, crate::Error> {
+impl DlpSerde for DltPlugin {
+    fn deserialize(xml_plugin: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let name = get_value(xml_plugin, "name")?;
         let filename = try_get_value(xml_plugin, "filename")?;
         let mode = value_as(xml_plugin, "mode")?;
@@ -24,5 +24,17 @@ impl DltPlugin {
             pg_type,
             prio,
         })
+    }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_plugin = xmltree::Element::new("plugin");
+
+        to_value(&mut xml_plugin, "name", &self.name);
+        try_to_value(&mut xml_plugin, "filename", &self.filename);
+        to_value(&mut xml_plugin, "mode", &self.mode);
+        to_value(&mut xml_plugin, "type", &self.pg_type);
+        to_value(&mut xml_plugin, "prio", &self.prio);
+
+        xml_plugin
     }
 }

@@ -1,4 +1,4 @@
-use crate::{get_value, value_as, value_as_bool};
+use crate::{DlpSerde, get_value, to_value, to_value_bool, value_as, value_as_bool};
 
 #[derive(Debug)]
 struct DltTable {
@@ -82,6 +82,53 @@ impl DltTable {
             marker_color,
         })
     }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_table = xmltree::Element::new("table");
+
+        to_value(&mut xml_table, "fontSize", &self.font_size);
+        to_value(&mut xml_table, "sectionSize", &self.section_size);
+        to_value(&mut xml_table, "fontName", &self.font_name);
+        to_value_bool(
+            &mut xml_table,
+            "automaticTimeSettings",
+            &self.automatic_time_settings,
+        );
+        to_value_bool(
+            &mut xml_table,
+            "automaticTimezoneFromDlt",
+            &self.automatic_timezone_from_dlt,
+        );
+        to_value(&mut xml_table, "utcOffset", &self.utc_offset);
+        to_value_bool(&mut xml_table, "dst", &self.dst);
+        to_value_bool(&mut xml_table, "showIndex", &self.show_index);
+        to_value_bool(&mut xml_table, "showTime", &self.show_time);
+        to_value_bool(&mut xml_table, "showTimestamp", &self.show_timestamp);
+        to_value_bool(&mut xml_table, "showCount", &self.show_count);
+        to_value_bool(&mut xml_table, "showEcuId", &self.show_ecu_id);
+        to_value_bool(&mut xml_table, "showApId", &self.show_app_id);
+        to_value_bool(
+            &mut xml_table,
+            "showApIdDesc",
+            &self.show_app_id_description,
+        );
+        to_value_bool(&mut xml_table, "showCtId", &self.show_context_id);
+        to_value_bool(
+            &mut xml_table,
+            "showCtIdDesc",
+            &self.show_context_id_description,
+        );
+        to_value_bool(&mut xml_table, "showType", &self.show_type);
+        to_value_bool(&mut xml_table, "showSubtype", &self.show_subtype);
+        to_value_bool(&mut xml_table, "showMode", &self.show_mode);
+        to_value_bool(&mut xml_table, "showNoar", &self.show_noar);
+        to_value_bool(&mut xml_table, "showPayload", &self.show_payload);
+        to_value_bool(&mut xml_table, "showArguments", &self.show_arguments);
+        to_value_bool(&mut xml_table, "showMsgId", &self.show_msg_id);
+        to_value(&mut xml_table, "markercolor", &self.marker_color);
+
+        xml_table
+    }
 }
 
 #[derive(Debug)]
@@ -130,6 +177,37 @@ impl DltOther {
             msg_id_format,
         })
     }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_other = xmltree::Element::new("other");
+
+        to_value_bool(&mut xml_other, "autoConnect", &self.auto_connect);
+        to_value(&mut xml_other, "autoScroll", &self.auto_scroll);
+        to_value_bool(
+            &mut xml_other,
+            "autoMarkFatalError",
+            &self.auto_mark_fatal_error,
+        );
+        to_value_bool(&mut xml_other, "autoMarkWarn", &self.auto_mark_warn);
+        to_value_bool(&mut xml_other, "autoMarkMarker", &self.auto_mark_warn);
+        to_value_bool(
+            &mut xml_other,
+            "updateContextLoadingFile",
+            &self.update_context_loading_file,
+        );
+        to_value_bool(
+            &mut xml_other,
+            "updateContextsUnregister",
+            &self.update_contexts_unregister,
+        );
+        to_value_bool(&mut xml_other, "loggingOnlyMode", &self.logging_only_mode);
+        to_value_bool(&mut xml_other, "splitlogfile", &self.split_log_file);
+        to_value(&mut xml_other, "fmaxFileSizeMB", &self.fmax_file_size_mb);
+        to_value_bool(&mut xml_other, "appendDateTime", &self.append_date_time);
+        to_value(&mut xml_other, "msgIdFormat", &self.msg_id_format);
+
+        xml_other
+    }
 }
 
 #[derive(Debug)]
@@ -138,8 +216,8 @@ pub struct DltSettings {
     other: DltOther,
 }
 
-impl DltSettings {
-    pub(crate) fn deserialize(xml_settings: &xmltree::Element) -> Result<Self, crate::Error> {
+impl DlpSerde for DltSettings {
+    fn deserialize(xml_settings: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let dlt_table = match xml_settings.get_child("table") {
             Some(el) => DltTable::deserialize(el)?,
             None => {
@@ -158,5 +236,21 @@ impl DltSettings {
             table: dlt_table,
             other: dlt_other,
         })
+    }
+
+    fn serialize(&self) -> xmltree::Element {
+        let mut xml_settings = xmltree::Element::new("settings");
+
+        let xml_table = self.table.serialize();
+        let xml_other = self.other.serialize();
+
+        xml_settings
+            .children
+            .push(xmltree::XMLNode::Element(xml_table));
+        xml_settings
+            .children
+            .push(xmltree::XMLNode::Element(xml_other));
+
+        xml_settings
     }
 }
