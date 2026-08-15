@@ -1,6 +1,6 @@
 [package]
-name = "dltui-viewer-parser"
-description = "Parser for the DLT frames"
+name = "dltui-viewer-dlt"
+description = "Handles DLT files"
 version.workspace = true
 authors.workspace = true
 license.workspace = true

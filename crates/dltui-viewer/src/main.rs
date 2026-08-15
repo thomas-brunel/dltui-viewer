@@ -33,7 +33,7 @@ fn main() {
     }
 
     if !args.dlt_file.is_empty() {
-        match dltui_viewer_parser::dlt_file::DltFile::open(&args.dlt_file) {
+        match dltui_viewer_dlt::dlt_file::DltFile::open(&args.dlt_file) {
             Ok(dlt_file) => println!("DLT FILE OPENED SUCCESSFULLY:\r\n{:#?}", dlt_file),
             Err(e) => println!("FAILED TO OPEN DLT FILE! {:?}", e),
         };

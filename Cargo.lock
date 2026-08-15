@@ -533,7 +533,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "dltui-viewer-dlp",
- "dltui-viewer-parser",
+ "dltui-viewer-dlt",
 ]
 
 [[package]]
@@ -555,16 +555,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "dltui-viewer-net"
-version = "0.1.0"
-
-[[package]]
-name = "dltui-viewer-parser"
+name = "dltui-viewer-dlt"
 version = "0.1.0"
 dependencies = [
  "chrono",
  "dlt_parse",
 ]
+
+[[package]]
+name = "dltui-viewer-net"
+version = "0.1.0"
 
 [[package]]
 name = "dltui-viewer-tui"
