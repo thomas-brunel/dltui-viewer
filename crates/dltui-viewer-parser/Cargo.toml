@@ -10,4 +10,5 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
+chrono = "0.4.45"
 dlt_parse = { version = "0.10.1", features = ["serde"] }

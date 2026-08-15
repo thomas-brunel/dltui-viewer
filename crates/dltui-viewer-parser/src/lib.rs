@@ -1,14 +1,20 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+pub mod dlt_file;
+
+#[derive(Debug)]
+pub enum Error {
+    MissingStorageTimestampError,
+    Utf8DecodeError(std::str::Utf8Error),
+    DecodeError(dlt_parse::error::VerboseDecodeError),
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+impl From<dlt_parse::error::VerboseDecodeError> for Error {
+    fn from(value: dlt_parse::error::VerboseDecodeError) -> Self {
+        Self::DecodeError(value)
+    }
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+impl From<std::str::Utf8Error> for Error {
+    fn from(value: std::str::Utf8Error) -> Self {
+        Self::Utf8DecodeError(value)
     }
 }
