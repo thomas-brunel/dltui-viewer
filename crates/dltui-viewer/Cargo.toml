@@ -11,4 +11,4 @@ categories.workspace = true
 
 [dependencies]
 clap = { version = "4.6.6", features = ["derive"] }
-dltui-viewer-serde = { version = "0.1.0", path = "../dltui-viewer-serde" }
+dltui-viewer-dlp = { version = "0.1.0", path = "../dltui-viewer-dlp" }

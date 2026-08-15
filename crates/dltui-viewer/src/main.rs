@@ -12,7 +12,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    match dltui_viewer_serde::dlt_project::DltProject::open(&args.dlp_file) {
+    match dltui_viewer_dlp::dlt_project::DltProject::open(&args.dlp_file) {
         Ok(mut dlt_project) => {
             println!("DLT PROJECT OPEN SUCCESSFULLY:\r\n{:#?}", dlt_project);
             if !args.save_as_path.is_empty() {

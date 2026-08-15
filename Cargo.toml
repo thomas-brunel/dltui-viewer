@@ -6,7 +6,7 @@ members = [
     "crates/dltui-viewer-tui",
     "crates/dltui-viewer-net",
     "crates/dltui-viewer-parser",
-    "crates/dltui-viewer-serde",
+    "crates/dltui-viewer-dlp",
 ]
 
 [workspace.package]

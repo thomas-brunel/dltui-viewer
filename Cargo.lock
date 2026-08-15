@@ -532,7 +532,7 @@ name = "dltui-viewer"
 version = "0.1.0"
 dependencies = [
  "clap",
- "dltui-viewer-serde",
+ "dltui-viewer-dlp",
 ]
 
 [[package]]
@@ -558,7 +558,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dltui-viewer-serde"
+name = "dltui-viewer-dlp"
 version = "0.1.0"
 dependencies = [
  "xmltree",

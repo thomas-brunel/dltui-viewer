@@ -1,5 +1,5 @@
 [package]
-name = "dltui-viewer-serde"
+name = "dltui-viewer-dlp"
 description = "Serialize and Deserialize DLT Project file"
 version.workspace = true
 authors.workspace = true
