@@ -547,6 +547,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "dltui-viewer-dlp"
+version = "0.1.0"
+dependencies = [
+ "xmltree",
+]
+
+[[package]]
 name = "dltui-viewer-net"
 version = "0.1.0"
 
@@ -555,13 +562,6 @@ name = "dltui-viewer-parser"
 version = "0.1.0"
 dependencies = [
  "dlt_parse",
-]
-
-[[package]]
-name = "dltui-viewer-dlp"
-version = "0.1.0"
-dependencies = [
- "xmltree",
 ]
 
 [[package]]
