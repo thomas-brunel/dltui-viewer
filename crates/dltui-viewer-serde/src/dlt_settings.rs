@@ -189,7 +189,7 @@ impl DltOther {
             &self.auto_mark_fatal_error,
         );
         to_value_bool(&mut xml_other, "autoMarkWarn", &self.auto_mark_warn);
-        to_value_bool(&mut xml_other, "autoMarkMarker", &self.auto_mark_warn);
+        to_value_bool(&mut xml_other, "autoMarkMarker", &self.auto_mark_marker);
         to_value_bool(
             &mut xml_other,
             "updateContextLoadingFile",
