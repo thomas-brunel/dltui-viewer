@@ -143,133 +143,135 @@ impl DltFile {
         };
 
         let mut text_payload = String::new();
-        verbose_values.for_each(|val| match val {
-            Ok(v) => {
-                match v {
-                    dlt_parse::verbose::VerboseValue::Bool(b) => {
-                        if let Some(name) = b.name {
-                            write!(&mut text_payload, "{}: ", name);
+        for verbose_value in verbose_values {
+            match verbose_value {
+                Ok(v) => {
+                    match v {
+                        dlt_parse::verbose::VerboseValue::Bool(b) => {
+                            if let Some(name) = b.name {
+                                write!(&mut text_payload, "{}: ", name)?;
+                            }
+                            write!(&mut text_payload, "{}", b.value)?;
                         }
-                        write!(&mut text_payload, "{}", b.value);
-                    }
-                    dlt_parse::verbose::VerboseValue::Str(s) => {
-                        if let Some(name) = s.name {
-                            write!(&mut text_payload, "{}: ", name);
+                        dlt_parse::verbose::VerboseValue::Str(s) => {
+                            if let Some(name) = s.name {
+                                write!(&mut text_payload, "{}: ", name)?;
+                            }
+                            write!(&mut text_payload, "{}", s.value)?;
                         }
-                        write!(&mut text_payload, "{}", s.value);
-                    }
-                    dlt_parse::verbose::VerboseValue::TraceInfo(ti) => {
-                        write!(&mut text_payload, "{}", ti.value);
-                    }
-                    dlt_parse::verbose::VerboseValue::I8(i_8) => {
-                        if let Some(var_info) = &i_8.variable_info {
-                            write!(&mut text_payload, "{:?}: ", var_info);
+                        dlt_parse::verbose::VerboseValue::TraceInfo(ti) => {
+                            write!(&mut text_payload, "{}", ti.value)?;
                         }
-                        if let Some(scaling) = &i_8.scaling {
-                            write!(&mut text_payload, "{:?} ", scaling);
+                        dlt_parse::verbose::VerboseValue::I8(i_8) => {
+                            if let Some(var_info) = &i_8.variable_info {
+                                write!(&mut text_payload, "{:?}: ", var_info)?;
+                            }
+                            if let Some(scaling) = &i_8.scaling {
+                                write!(&mut text_payload, "{:?} ", scaling)?;
+                            }
+                            write!(&mut text_payload, "{}", i_8.value)?;
                         }
-                        write!(&mut text_payload, "{}", i_8.value);
-                    }
-                    dlt_parse::verbose::VerboseValue::I16(i_16) => {
-                        write!(&mut text_payload, "{:?}", i_16);
-                    }
-                    dlt_parse::verbose::VerboseValue::I32(i_32) => {
-                        write!(&mut text_payload, "{:?}", i_32);
-                    }
-                    dlt_parse::verbose::VerboseValue::I64(i_64) => {
-                        write!(&mut text_payload, "{:?}", i_64);
-                    }
-                    dlt_parse::verbose::VerboseValue::I128(i_128) => {
-                        write!(&mut text_payload, "{:?}", i_128);
-                    }
-                    dlt_parse::verbose::VerboseValue::U8(u_8) => {
-                        write!(&mut text_payload, "{:?}", u_8);
-                    }
-                    dlt_parse::verbose::VerboseValue::U16(u_16) => {
-                        write!(&mut text_payload, "{:?}", u_16);
-                    }
-                    dlt_parse::verbose::VerboseValue::U32(u_32) => {
-                        write!(&mut text_payload, "{:?}", u_32);
-                    }
-                    dlt_parse::verbose::VerboseValue::U64(u_64) => {
-                        write!(&mut text_payload, "{:?}", u_64);
-                    }
-                    dlt_parse::verbose::VerboseValue::U128(u_128) => {
-                        write!(&mut text_payload, "{:?}", u_128);
-                    }
-                    dlt_parse::verbose::VerboseValue::F16(f_16) => {
-                        write!(&mut text_payload, "{:?}", f_16);
-                    }
-                    dlt_parse::verbose::VerboseValue::F32(f_32) => {
-                        write!(&mut text_payload, "{:?}", f_32);
-                    }
-                    dlt_parse::verbose::VerboseValue::F64(f_64) => {
-                        write!(&mut text_payload, "{:?}", f_64);
-                    }
-                    dlt_parse::verbose::VerboseValue::F128(f_128) => {
-                        write!(&mut text_payload, "{:?}", f_128);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrBool(ab) => {
-                        write!(&mut text_payload, "{:?}", ab);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrI8(ai_9) => {
-                        write!(&mut text_payload, "{:?}", ai_9);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrI16(ai_16) => {
-                        write!(&mut text_payload, "{:?}", ai_16);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrI32(a_i32) => {
-                        write!(&mut text_payload, "{:?}", a_i32);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrI64(a_i64) => {
-                        write!(&mut text_payload, "{:?}", a_i64);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrI128(a_i128) => {
-                        write!(&mut text_payload, "{:?}", a_i128);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrU8(au_8) => {
-                        write!(&mut text_payload, "{:?}", au_8);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrU16(au_16) => {
-                        write!(&mut text_payload, "{:?}", au_16);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrU32(au_32) => {
-                        write!(&mut text_payload, "{:?}", au_32);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrU64(au_64) => {
-                        write!(&mut text_payload, "{:?}", au_64);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrU128(au_128) => {
-                        write!(&mut text_payload, "{:?}", au_128);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrF16(af_16) => {
-                        write!(&mut text_payload, "{:?}", af_16);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrF32(af_32) => {
-                        write!(&mut text_payload, "{:?}", af_32);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrF64(af_64) => {
-                        write!(&mut text_payload, "{:?}", af_64);
-                    }
-                    dlt_parse::verbose::VerboseValue::ArrF128(af_128) => {
-                        write!(&mut text_payload, "{:?}", af_128);
-                    }
-                    dlt_parse::verbose::VerboseValue::Struct(stct) => {
-                        write!(&mut text_payload, "{:?}", stct);
-                    }
-                    dlt_parse::verbose::VerboseValue::Raw(r) => {
-                        if let Some(name) = r.name {
-                            write!(&mut text_payload, "{}: ", name);
+                        dlt_parse::verbose::VerboseValue::I16(i_16) => {
+                            write!(&mut text_payload, "{:?}", i_16)?;
                         }
-                        write!(&mut text_payload, "{:?}", r.data);
+                        dlt_parse::verbose::VerboseValue::I32(i_32) => {
+                            write!(&mut text_payload, "{:?}", i_32)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::I64(i_64) => {
+                            write!(&mut text_payload, "{:?}", i_64)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::I128(i_128) => {
+                            write!(&mut text_payload, "{:?}", i_128)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::U8(u_8) => {
+                            write!(&mut text_payload, "{:?}", u_8)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::U16(u_16) => {
+                            write!(&mut text_payload, "{:?}", u_16)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::U32(u_32) => {
+                            write!(&mut text_payload, "{:?}", u_32)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::U64(u_64) => {
+                            write!(&mut text_payload, "{:?}", u_64)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::U128(u_128) => {
+                            write!(&mut text_payload, "{:?}", u_128)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::F16(f_16) => {
+                            write!(&mut text_payload, "{:?}", f_16)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::F32(f_32) => {
+                            write!(&mut text_payload, "{:?}", f_32)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::F64(f_64) => {
+                            write!(&mut text_payload, "{:?}", f_64)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::F128(f_128) => {
+                            write!(&mut text_payload, "{:?}", f_128)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrBool(ab) => {
+                            write!(&mut text_payload, "{:?}", ab)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrI8(ai_9) => {
+                            write!(&mut text_payload, "{:?}", ai_9)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrI16(ai_16) => {
+                            write!(&mut text_payload, "{:?}", ai_16)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrI32(a_i32) => {
+                            write!(&mut text_payload, "{:?}", a_i32)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrI64(a_i64) => {
+                            write!(&mut text_payload, "{:?}", a_i64)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrI128(a_i128) => {
+                            write!(&mut text_payload, "{:?}", a_i128)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrU8(au_8) => {
+                            write!(&mut text_payload, "{:?}", au_8)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrU16(au_16) => {
+                            write!(&mut text_payload, "{:?}", au_16)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrU32(au_32) => {
+                            write!(&mut text_payload, "{:?}", au_32)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrU64(au_64) => {
+                            write!(&mut text_payload, "{:?}", au_64)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrU128(au_128) => {
+                            write!(&mut text_payload, "{:?}", au_128)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrF16(af_16) => {
+                            write!(&mut text_payload, "{:?}", af_16)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrF32(af_32) => {
+                            write!(&mut text_payload, "{:?}", af_32)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrF64(af_64) => {
+                            write!(&mut text_payload, "{:?}", af_64)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::ArrF128(af_128) => {
+                            write!(&mut text_payload, "{:?}", af_128)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::Struct(stct) => {
+                            write!(&mut text_payload, "{:?}", stct)?;
+                        }
+                        dlt_parse::verbose::VerboseValue::Raw(r) => {
+                            if let Some(name) = r.name {
+                                write!(&mut text_payload, "{}: ", name)?;
+                            }
+                            write!(&mut text_payload, "{:?}", r.data)?;
+                        }
                     }
+                    text_payload.push(' ');
                 }
-                text_payload.push(' ');
+                Err(e) => {
+                    return Err(crate::Error::DecodeError(e));
+                }
             }
-            Err(e) => {
-                println!("Failed to decode verbose value {:?}", e);
-            } //Err(dlt_parse_error::DltParseError::DecodeFailed(e)),
-        });
+        }
 
         Ok(text_payload)
     }
