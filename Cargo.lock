@@ -533,6 +533,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "dltui-viewer-dlp",
+ "dltui-viewer-dlt",
 ]
 
 [[package]]
@@ -547,22 +548,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "dltui-viewer-net"
-version = "0.1.0"
-
-[[package]]
-name = "dltui-viewer-parser"
-version = "0.1.0"
-dependencies = [
- "dlt_parse",
-]
-
-[[package]]
 name = "dltui-viewer-dlp"
 version = "0.1.0"
 dependencies = [
  "xmltree",
 ]
+
+[[package]]
+name = "dltui-viewer-dlt"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "dlt_parse",
+]
+
+[[package]]
+name = "dltui-viewer-net"
+version = "0.1.0"
 
 [[package]]
 name = "dltui-viewer-tui"

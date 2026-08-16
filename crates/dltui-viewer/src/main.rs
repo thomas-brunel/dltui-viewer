@@ -1,4 +1,5 @@
 use clap::Parser;
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -7,6 +8,8 @@ struct Args {
     dlp_file: String,
     #[arg(short, long, default_value_t="".to_string())]
     save_as_path: String,
+    #[arg(long, default_value_t="".to_string())]
+    dlt_file: String,
 }
 
 fn main() {
@@ -27,5 +30,12 @@ fn main() {
             }
         }
         Err(e) => println!("FAILED TO OPEN DLT PROJECT: {:?}", e),
+    }
+
+    if !args.dlt_file.is_empty() {
+        match dltui_viewer_dlt::dlt_file::DltFile::open(&args.dlt_file) {
+            Ok(dlt_file) => println!("DLT FILE OPENED SUCCESSFULLY:\r\n{:#?}", dlt_file),
+            Err(e) => println!("FAILED TO OPEN DLT FILE! {:?}", e),
+        };
     }
 }

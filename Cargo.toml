@@ -5,7 +5,7 @@ members = [
     "crates/dltui-viewer-core",
     "crates/dltui-viewer-tui",
     "crates/dltui-viewer-net",
-    "crates/dltui-viewer-parser",
+    "crates/dltui-viewer-dlt",
     "crates/dltui-viewer-dlp",
 ]
 
