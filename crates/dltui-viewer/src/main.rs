@@ -10,6 +10,8 @@ struct Args {
     save_as_path: String,
     #[arg(long, default_value_t="".to_string())]
     dlt_file: String,
+    #[arg(long, action)]
+    no_tui: bool,
 }
 
 fn main() {
@@ -41,5 +43,12 @@ fn main() {
             Ok(dlt_file) => println!("DLT FILE OPENED SUCCESSFULLY:\r\n{:#?}", dlt_file),
             Err(e) => println!("FAILED TO OPEN DLT FILE! {:?}", e),
         };
+    }
+
+    if !args.no_tui {
+        match dltui_viewer_tui::start_tui() {
+            Ok(_) => println!("TUI OK"),
+            Err(e) => println!("TUI FAILED! {:?}", e),
+        }
     }
 }
