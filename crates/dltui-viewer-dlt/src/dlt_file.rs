@@ -7,6 +7,17 @@ pub struct DltFile {
 
 impl DltFile {
     pub fn open(path: &PathBuf) -> Result<DltFile, crate::Error> {
+        match path.extension() {
+            Some(ext) => {
+                if !ext.eq_ignore_ascii_case("dlt") {
+                    return Err(crate::Error::UnsupportedExtension);
+                }
+            }
+            None => {
+                return Err(crate::Error::MissingFileExtension);
+            }
+        }
+
         let dlt_file = std::fs::File::open(path).expect("failed to open file");
         let mut reader =
             dlt_parse::storage::DltStorageReader::new(std::io::BufReader::new(dlt_file));

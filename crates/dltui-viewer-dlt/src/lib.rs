@@ -2,6 +2,8 @@ pub mod dlt_file;
 
 #[derive(Debug)]
 pub enum Error {
+    MissingFileExtension,
+    UnsupportedExtension,
     MissingStorageTimestampError,
     Utf8DecodeError(std::str::Utf8Error),
     DecodeError(dlt_parse::error::VerboseDecodeError),
