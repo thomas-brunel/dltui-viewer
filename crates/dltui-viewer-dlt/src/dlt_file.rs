@@ -1,12 +1,12 @@
-use std::fmt::Write;
+use std::{fmt::Write, path::PathBuf};
 
 #[derive(Debug)]
 pub struct DltFile {
-    path: String,
+    path: PathBuf,
 }
 
 impl DltFile {
-    pub fn open(path: &str) -> Result<DltFile, crate::Error> {
+    pub fn open(path: &PathBuf) -> Result<DltFile, crate::Error> {
         let dlt_file = std::fs::File::open(path).expect("failed to open file");
         let mut reader =
             dlt_parse::storage::DltStorageReader::new(std::io::BufReader::new(dlt_file));
@@ -109,7 +109,7 @@ impl DltFile {
             }
         }
 
-        Ok(DltFile { path: path.into() })
+        Ok(DltFile { path: path.clone() })
     }
 
     pub fn frame_storage_header_timestamp_as_date_time(
