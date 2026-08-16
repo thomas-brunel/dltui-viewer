@@ -2,11 +2,11 @@ use crate::{
     DlpSerde, deserialize_child, deserialize_children, dlt_ecu::DltEcu, dlt_filter::DltFilter,
     dlt_plugin::DltPlugin, dlt_settings::DltSettings, serialize_child, serialize_children,
 };
-use std::io::Read;
+use std::{io::Read, path::PathBuf};
 
 #[derive(Debug)]
 pub struct DltProject {
-    path: String,
+    path: PathBuf,
     settings: DltSettings,
     ecus: Vec<DltEcu>,
     filters: Vec<DltFilter>,
@@ -14,7 +14,7 @@ pub struct DltProject {
 }
 
 impl DltProject {
-    pub fn open(path: &str) -> Result<Self, crate::Error> {
+    pub fn open(path: &PathBuf) -> Result<Self, crate::Error> {
         if !path.ends_with(".dlp") {
             return Err(crate::Error::UnsupportedExtension);
         }
@@ -37,7 +37,7 @@ impl DltProject {
     }
 
     pub fn save(&self) -> Result<(), crate::Error> {
-        let file = match std::fs::File::open(self.path.as_str()) {
+        let file = match std::fs::File::open(&self.path) {
             Ok(f) => f,
             Err(e) => return Err(xmltree::Error::Io(e))?,
         };
@@ -45,7 +45,7 @@ impl DltProject {
         self.write_dlp(file, true)
     }
 
-    pub fn save_as(&mut self, new_path: &str) -> Result<(), crate::Error> {
+    pub fn save_as(&mut self, new_path: &PathBuf) -> Result<(), crate::Error> {
         let file = match std::fs::File::create(new_path) {
             Ok(f) => f,
             Err(e) => return Err(xmltree::Error::Io(e))?,
@@ -64,12 +64,12 @@ impl DltProject {
         Ok(())
     }
 
-    fn with_path(mut self, path: &str) -> Self {
+    fn with_path(mut self, path: &PathBuf) -> Self {
         self.path = path.into();
         self
     }
 
-    fn set_path(&mut self, new_path: &str) -> &mut Self {
+    fn set_path(&mut self, new_path: &PathBuf) -> &mut Self {
         self.path = new_path.into();
         self
     }
