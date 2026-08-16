@@ -23,6 +23,7 @@ pub enum Error {
     FieldMissing(String),
     FieldTextMissing(String),
     FieldTextParseError(String),
+    FieldTypeError((String, String)),
 }
 
 impl From<xmltree::Error> for Error {
@@ -122,7 +123,16 @@ where
 
 pub(crate) fn value_as_bool(parent: &xmltree::Element, field: &str) -> Result<bool, Error> {
     let value: u8 = value_as(parent, field)?;
-    let value_bool = if value == 1 { true } else { false };
+    let value_bool = if value == 1 {
+        true
+    } else if value == 0 {
+        false
+    } else {
+        return Err(crate::Error::FieldTypeError((
+            field.into(),
+            format!("expected boolean got {}", value),
+        )));
+    };
     Ok(value_bool)
 }
 
