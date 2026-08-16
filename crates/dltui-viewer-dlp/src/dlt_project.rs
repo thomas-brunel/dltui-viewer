@@ -7,10 +7,22 @@ use std::{io::Read, path::PathBuf};
 #[derive(Debug)]
 pub struct DltProject {
     path: PathBuf,
-    settings: DltSettings,
-    ecus: Vec<DltEcu>,
-    filters: Vec<DltFilter>,
+    pub settings: DltSettings,
+    pub ecus: Vec<DltEcu>,
+    pub filters: Vec<DltFilter>,
     plugins: Vec<DltPlugin>,
+}
+
+impl Default for DltProject {
+    fn default() -> Self {
+        Self {
+            path: "".into(),
+            settings: DltSettings::default(),
+            ecus: Vec::new(),
+            filters: Vec::new(),
+            plugins: Vec::new(),
+        }
+    }
 }
 
 impl DltProject {

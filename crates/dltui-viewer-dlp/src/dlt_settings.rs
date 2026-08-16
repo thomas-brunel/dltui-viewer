@@ -1,35 +1,66 @@
 use crate::{DlpSerde, get_value, to_value, to_value_bool, value_as, value_as_bool};
 
 #[derive(Debug)]
-struct DltTable {
+pub struct DltTable {
     font_size: u8,
     section_size: u8,
     font_name: String,
-    automatic_time_settings: bool,
-    automatic_timezone_from_dlt: bool,
-    utc_offset: i16,
-    dst: bool,
-    show_index: bool,
-    show_time: bool,
-    show_timestamp: bool,
-    show_count: bool,
-    show_ecu_id: bool,
-    show_app_id: bool,
-    show_app_id_description: bool,
-    show_context_id: bool,
-    show_context_id_description: bool,
-    show_type: bool,
-    show_subtype: bool,
-    show_mode: bool,
-    show_noar: bool,
-    show_payload: bool,
-    show_arguments: bool,
-    show_msg_id: bool,
-    marker_color: String, // Todo: create a Color enum ?
+    pub automatic_time_settings: bool,
+    pub automatic_timezone_from_dlt: bool,
+    pub utc_offset: i16,
+    pub dst: bool,
+    pub show_index: bool,
+    pub show_time: bool,
+    pub show_timestamp: bool,
+    pub show_count: bool,
+    pub show_ecu_id: bool,
+    pub show_app_id: bool,
+    pub show_app_id_description: bool,
+    pub show_context_id: bool,
+    pub show_context_id_description: bool,
+    pub show_type: bool,
+    pub show_subtype: bool,
+    pub show_mode: bool,
+    pub show_noar: bool,
+    pub show_payload: bool,
+    pub show_arguments: bool,
+    pub show_msg_id: bool,
+    pub marker_color: String, // Todo: create a Color enum ?
 }
 
-impl DltTable {
-    fn deserialize(xml_table: &xmltree::Element) -> Result<Self, crate::Error> {
+impl Default for DltTable {
+    fn default() -> Self {
+        Self {
+            font_size: 8,
+            section_size: 16,
+            font_name: "Segoe UI,8".into(),
+            automatic_time_settings: true,
+            automatic_timezone_from_dlt: true,
+            utc_offset: -1,
+            dst: false,
+            show_index: true,
+            show_time: true,
+            show_timestamp: true,
+            show_count: false,
+            show_ecu_id: true,
+            show_app_id: true,
+            show_app_id_description: false,
+            show_context_id: true,
+            show_context_id_description: false,
+            show_type: true,
+            show_subtype: false,
+            show_mode: false,
+            show_noar: false,
+            show_payload: true,
+            show_arguments: false,
+            show_msg_id: false,
+            marker_color: "#808080".into(),
+        }
+    }
+}
+
+impl DlpSerde for DltTable {
+    fn deserialize(xml_table: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let font_size = value_as(xml_table, "fontSize")?;
         let section_size = value_as(xml_table, "sectionSize")?;
         let font_name = get_value(xml_table, "fontName")?;
@@ -132,25 +163,44 @@ impl DltTable {
 }
 
 #[derive(Debug)]
-struct DltOther {
-    auto_connect: bool,
-    auto_scroll: i8,
-    auto_mark_fatal_error: bool,
-    auto_mark_warn: bool,
-    auto_mark_marker: bool,
-    update_context_loading_file: bool,
-    update_contexts_unregister: bool,
-    logging_only_mode: bool,
-    split_log_file: bool,
-    fmax_file_size_mb: u16,
-    append_date_time: bool,
-    msg_id_format: String,
+pub struct DltOther {
+    pub auto_connect: bool,
+    pub auto_scroll: bool,
+    pub auto_mark_fatal_error: bool,
+    pub auto_mark_warn: bool,
+    pub auto_mark_marker: bool,
+    pub update_context_loading_file: bool,
+    pub update_contexts_unregister: bool,
+    pub logging_only_mode: bool,
+    pub split_log_file: bool,
+    pub fmax_file_size_mb: u16,
+    pub append_date_time: bool,
+    pub msg_id_format: String,
 }
 
-impl DltOther {
-    fn deserialize(xml_other: &xmltree::Element) -> Result<Self, crate::Error> {
+impl Default for DltOther {
+    fn default() -> Self {
+        Self {
+            auto_connect: false,
+            auto_scroll: true,
+            auto_mark_fatal_error: false,
+            auto_mark_warn: false,
+            auto_mark_marker: true,
+            update_context_loading_file: true,
+            update_contexts_unregister: false,
+            logging_only_mode: false,
+            split_log_file: false,
+            fmax_file_size_mb: 100,
+            append_date_time: false,
+            msg_id_format: "[%08u]".into(),
+        }
+    }
+}
+
+impl DlpSerde for DltOther {
+    fn deserialize(xml_other: &mut xmltree::Element) -> Result<Self, crate::Error> {
         let auto_connect = value_as_bool(xml_other, "autoConnect")?;
-        let auto_scroll = value_as(xml_other, "autoScroll")?;
+        let auto_scroll = value_as_bool(xml_other, "autoScroll")?;
         let auto_mark_fatal_error = value_as_bool(xml_other, "autoMarkFatalError")?;
         let auto_mark_warn = value_as_bool(xml_other, "autoMarkWarn")?;
         let auto_mark_marker = value_as_bool(xml_other, "autoMarkMarker")?;
@@ -182,7 +232,7 @@ impl DltOther {
         let mut xml_other = xmltree::Element::new("other");
 
         to_value_bool(&mut xml_other, "autoConnect", &self.auto_connect);
-        to_value(&mut xml_other, "autoScroll", &self.auto_scroll);
+        to_value_bool(&mut xml_other, "autoScroll", &self.auto_scroll);
         to_value_bool(
             &mut xml_other,
             "autoMarkFatalError",
@@ -212,21 +262,30 @@ impl DltOther {
 
 #[derive(Debug)]
 pub struct DltSettings {
-    table: DltTable,
-    other: DltOther,
+    pub table: DltTable,
+    pub other: DltOther,
+}
+
+impl Default for DltSettings {
+    fn default() -> Self {
+        Self {
+            table: DltTable::default(),
+            other: DltOther::default(),
+        }
+    }
 }
 
 impl DlpSerde for DltSettings {
     fn deserialize(xml_settings: &mut xmltree::Element) -> Result<Self, crate::Error> {
-        let dlt_table = match xml_settings.get_child("table") {
-            Some(el) => DltTable::deserialize(el)?,
+        let dlt_table = match xml_settings.take_child("table") {
+            Some(mut el) => DltTable::deserialize(&mut el)?,
             None => {
                 return Err(crate::Error::FieldMissing("table".to_string()));
             }
         };
 
-        let dlt_other = match xml_settings.get_child("other") {
-            Some(el) => DltOther::deserialize(el)?,
+        let dlt_other = match xml_settings.take_child("other") {
+            Some(mut el) => DltOther::deserialize(&mut el)?,
             None => {
                 return Err(crate::Error::FieldMissing("other".to_string()));
             }
