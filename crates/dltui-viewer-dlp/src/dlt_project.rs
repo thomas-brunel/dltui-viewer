@@ -15,8 +15,15 @@ pub struct DltProject {
 
 impl DltProject {
     pub fn open(path: &PathBuf) -> Result<Self, crate::Error> {
-        if !path.ends_with(".dlp") {
-            return Err(crate::Error::UnsupportedExtension);
+        match path.extension() {
+            Some(ext) => {
+                if !ext.eq_ignore_ascii_case("dlp") {
+                    return Err(crate::Error::UnsupportedExtension);
+                }
+            }
+            None => {
+                return Err(crate::Error::MissingFileExtension);
+            }
         }
 
         let mut file = match std::fs::File::open(path) {

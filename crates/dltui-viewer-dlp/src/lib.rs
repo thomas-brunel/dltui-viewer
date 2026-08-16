@@ -16,6 +16,7 @@ pub mod dlt_settings;
 
 #[derive(Debug)]
 pub enum Error {
+    MissingFileExtension,
     UnsupportedExtension,
     XmlTree(xmltree::Error),
     XmlTreeParse(xmltree::ParseError),
