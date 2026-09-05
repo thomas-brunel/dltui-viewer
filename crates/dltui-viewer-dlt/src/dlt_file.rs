@@ -34,7 +34,6 @@ impl DltFile {
                 msg.packet.header().clone(),
                 msg.packet.header().extended_header.clone(),
                 msg.packet.slice().to_vec(),
-                msg.packet.payload().to_vec(),
             );
 
             frames.push(dlt_frame);

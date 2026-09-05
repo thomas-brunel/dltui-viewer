@@ -12,13 +12,12 @@ pub struct MessageType(pub String);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Subtype(pub String);
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DltFrame {
     storage_header: dlt_parse::storage::StorageHeader,
     header: dlt_parse::DltHeader,
     extended_header: Option<dlt_parse::DltExtendedHeader>,
     raw_frame: Vec<u8>,
-    raw_payload: Vec<u8>,
 }
 
 impl DltFrame {
@@ -27,14 +26,12 @@ impl DltFrame {
         header: dlt_parse::DltHeader,
         extended_header: Option<dlt_parse::DltExtendedHeader>,
         raw_frame: Vec<u8>,
-        raw_payload: Vec<u8>,
     ) -> Self {
         Self {
             storage_header,
             header,
             extended_header,
             raw_frame,
-            raw_payload,
         }
     }
 
