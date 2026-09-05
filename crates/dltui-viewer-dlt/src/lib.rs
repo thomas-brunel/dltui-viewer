@@ -1,4 +1,5 @@
 pub mod dlt_file;
+pub mod dlt_frame;
 
 #[derive(Debug)]
 pub enum Error {
@@ -6,6 +7,7 @@ pub enum Error {
     UnsupportedExtension,
     MissingStorageTimestampError,
     Utf8DecodeError(std::str::Utf8Error),
+    ParseError,
     DecodeError(dlt_parse::error::VerboseDecodeError),
     FormatError(std::fmt::Error),
     IoError(std::io::Error),
