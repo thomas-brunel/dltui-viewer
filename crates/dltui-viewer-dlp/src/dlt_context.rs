@@ -34,3 +34,38 @@ impl DlpSerde for DltContext {
         xml_context
     }
 }
+
+impl DltContext {
+    pub fn new(id: String, description: Option<String>, log_level: i8, trace_status: i8) -> Self {
+        Self {
+            id,
+            description,
+            log_level,
+            trace_status,
+        }
+    }
+
+    pub fn id(&self) -> &str {
+        &self.id
+    }
+
+    pub fn description(&self) -> Option<&str> {
+        self.description.as_deref()
+    }
+
+    pub fn log_level(&self) -> i8 {
+        self.log_level
+    }
+
+    pub fn trace_status(&self) -> i8 {
+        self.trace_status
+    }
+
+    pub fn set_log_level(&mut self, log_level: i8) {
+        self.log_level = log_level;
+    }
+
+    pub fn set_trace_status(&mut self, trace_status: i8) {
+        self.trace_status = trace_status;
+    }
+}

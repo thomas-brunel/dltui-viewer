@@ -5,27 +5,27 @@ pub struct DltTable {
     font_size: u8,
     section_size: u8,
     font_name: String,
-    pub automatic_time_settings: bool,
-    pub automatic_timezone_from_dlt: bool,
-    pub utc_offset: i16,
-    pub dst: bool,
-    pub show_index: bool,
-    pub show_time: bool,
-    pub show_timestamp: bool,
-    pub show_count: bool,
-    pub show_ecu_id: bool,
-    pub show_app_id: bool,
-    pub show_app_id_description: bool,
-    pub show_context_id: bool,
-    pub show_context_id_description: bool,
-    pub show_type: bool,
-    pub show_subtype: bool,
-    pub show_mode: bool,
-    pub show_noar: bool,
-    pub show_payload: bool,
-    pub show_arguments: bool,
-    pub show_msg_id: bool,
-    pub marker_color: String, // Todo: create a Color enum ?
+    automatic_time_settings: bool,
+    automatic_timezone_from_dlt: bool,
+    utc_offset: i16,
+    dst: bool,
+    show_index: bool,
+    show_time: bool,
+    show_timestamp: bool,
+    show_count: bool,
+    show_ecu_id: bool,
+    show_app_id: bool,
+    show_app_id_description: bool,
+    show_context_id: bool,
+    show_context_id_description: bool,
+    show_type: bool,
+    show_subtype: bool,
+    show_mode: bool,
+    show_noar: bool,
+    show_payload: bool,
+    show_arguments: bool,
+    show_msg_id: bool,
+    marker_color: String, // Todo: create a Color enum ?
 }
 
 impl Default for DltTable {
@@ -162,20 +162,239 @@ impl DlpSerde for DltTable {
     }
 }
 
+impl DltTable {
+    pub fn new(
+        automatic_time_settings: bool,
+        automatic_timezone_from_dlt: bool,
+        utc_offset: i16,
+        dst: bool,
+        show_index: bool,
+        show_time: bool,
+        show_timestamp: bool,
+        show_count: bool,
+        show_ecu_id: bool,
+        show_app_id: bool,
+        show_app_id_description: bool,
+        show_context_id: bool,
+        show_context_id_description: bool,
+        show_type: bool,
+        show_subtype: bool,
+        show_mode: bool,
+        show_noar: bool,
+        show_payload: bool,
+        show_arguments: bool,
+        show_msg_id: bool,
+        marker_color: String,
+    ) -> Self {
+        Self {
+            automatic_time_settings,
+            automatic_timezone_from_dlt,
+            utc_offset,
+            dst,
+            show_index,
+            show_time,
+            show_timestamp,
+            show_count,
+            show_ecu_id,
+            show_app_id,
+            show_app_id_description,
+            show_context_id,
+            show_context_id_description,
+            show_type,
+            show_subtype,
+            show_mode,
+            show_noar,
+            show_payload,
+            show_arguments,
+            show_msg_id,
+            marker_color,
+            ..Default::default()
+        }
+    }
+
+    pub fn automatic_time_settings(&self) -> bool {
+        self.automatic_time_settings
+    }
+
+    pub fn automatic_timezone_from_dlt(&self) -> bool {
+        self.automatic_timezone_from_dlt
+    }
+
+    pub fn utc_offset(&self) -> i16 {
+        self.utc_offset
+    }
+
+    pub fn dst(&self) -> bool {
+        self.dst
+    }
+
+    pub fn show_index(&self) -> bool {
+        self.show_index
+    }
+
+    pub fn show_time(&self) -> bool {
+        self.show_time
+    }
+
+    pub fn show_timestamp(&self) -> bool {
+        self.show_timestamp
+    }
+
+    pub fn show_count(&self) -> bool {
+        self.show_count
+    }
+
+    pub fn show_ecu_id(&self) -> bool {
+        self.show_ecu_id
+    }
+
+    pub fn show_app_id(&self) -> bool {
+        self.show_app_id
+    }
+
+    pub fn show_app_id_description(&self) -> bool {
+        self.show_app_id_description
+    }
+
+    pub fn show_context_id(&self) -> bool {
+        self.show_context_id
+    }
+
+    pub fn show_context_id_description(&self) -> bool {
+        self.show_context_id_description
+    }
+
+    pub fn show_type(&self) -> bool {
+        self.show_type
+    }
+
+    pub fn show_subtype(&self) -> bool {
+        self.show_subtype
+    }
+
+    pub fn show_mode(&self) -> bool {
+        self.show_mode
+    }
+
+    pub fn show_noar(&self) -> bool {
+        self.show_noar
+    }
+
+    pub fn show_payload(&self) -> bool {
+        self.show_payload
+    }
+
+    pub fn show_arguments(&self) -> bool {
+        self.show_arguments
+    }
+
+    pub fn show_msg_id(&self) -> bool {
+        self.show_msg_id
+    }
+
+    pub fn marker_color(&self) -> &str {
+        &self.marker_color
+    }
+
+    pub fn set_automatic_time_settings(&mut self, v: bool) {
+        self.automatic_time_settings = v;
+    }
+
+    pub fn set_automatic_timezone_from_dlt(&mut self, v: bool) {
+        self.automatic_timezone_from_dlt = v;
+    }
+
+    pub fn set_utc_offset(&mut self, utc_offset: i16) {
+        self.utc_offset = utc_offset;
+    }
+
+    pub fn set_dst(&mut self, dst: bool) {
+        self.dst = dst;
+    }
+
+    pub fn set_show_index(&mut self, v: bool) {
+        self.show_index = v;
+    }
+
+    pub fn set_show_time(&mut self, v: bool) {
+        self.show_time = v;
+    }
+
+    pub fn set_show_timestamp(&mut self, v: bool) {
+        self.show_timestamp = v;
+    }
+
+    pub fn set_show_count(&mut self, v: bool) {
+        self.show_count = v;
+    }
+
+    pub fn set_show_ecu_id(&mut self, v: bool) {
+        self.show_ecu_id = v;
+    }
+
+    pub fn set_show_app_id(&mut self, v: bool) {
+        self.show_app_id = v;
+    }
+
+    pub fn set_show_app_id_description(&mut self, v: bool) {
+        self.show_app_id_description = v;
+    }
+
+    pub fn set_show_context_id(&mut self, v: bool) {
+        self.show_context_id = v;
+    }
+
+    pub fn set_show_context_id_description(&mut self, v: bool) {
+        self.show_context_id_description = v;
+    }
+
+    pub fn set_show_type(&mut self, v: bool) {
+        self.show_type = v;
+    }
+
+    pub fn set_show_subtype(&mut self, v: bool) {
+        self.show_subtype = v;
+    }
+
+    pub fn set_show_mode(&mut self, v: bool) {
+        self.show_mode = v;
+    }
+
+    pub fn set_show_noar(&mut self, v: bool) {
+        self.show_noar = v;
+    }
+
+    pub fn set_show_payload(&mut self, v: bool) {
+        self.show_payload = v;
+    }
+
+    pub fn set_show_arguments(&mut self, v: bool) {
+        self.show_arguments = v;
+    }
+
+    pub fn set_show_msg_id(&mut self, v: bool) {
+        self.show_msg_id = v;
+    }
+
+    pub fn set_marker_color(&mut self, marker_color: String) {
+        self.marker_color = marker_color;
+    }
+}
+
 #[derive(Debug)]
 pub struct DltOther {
-    pub auto_connect: bool,
-    pub auto_scroll: bool,
-    pub auto_mark_fatal_error: bool,
-    pub auto_mark_warn: bool,
-    pub auto_mark_marker: bool,
-    pub update_context_loading_file: bool,
-    pub update_contexts_unregister: bool,
-    pub logging_only_mode: bool,
-    pub split_log_file: bool,
-    pub fmax_file_size_mb: u16,
-    pub append_date_time: bool,
-    pub msg_id_format: String,
+    auto_connect: bool,
+    auto_scroll: bool,
+    auto_mark_fatal_error: bool,
+    auto_mark_warn: bool,
+    auto_mark_marker: bool,
+    update_context_loading_file: bool,
+    update_contexts_unregister: bool,
+    logging_only_mode: bool,
+    split_log_file: bool,
+    fmax_file_size_mb: u16,
+    append_date_time: bool,
+    msg_id_format: String,
 }
 
 impl Default for DltOther {
@@ -260,10 +479,142 @@ impl DlpSerde for DltOther {
     }
 }
 
+impl DltOther {
+    pub fn new(
+        auto_connect: bool,
+        auto_scroll: bool,
+        auto_mark_fatal_error: bool,
+        auto_mark_warn: bool,
+        auto_mark_marker: bool,
+        update_context_loading_file: bool,
+        update_contexts_unregister: bool,
+        logging_only_mode: bool,
+        split_log_file: bool,
+        fmax_file_size_mb: u16,
+        append_date_time: bool,
+        msg_id_format: String,
+    ) -> Self {
+        Self {
+            auto_connect,
+            auto_scroll,
+            auto_mark_fatal_error,
+            auto_mark_warn,
+            auto_mark_marker,
+            update_context_loading_file,
+            update_contexts_unregister,
+            logging_only_mode,
+            split_log_file,
+            fmax_file_size_mb,
+            append_date_time,
+            msg_id_format,
+        }
+    }
+
+    pub fn auto_connect(&self) -> bool {
+        self.auto_connect
+    }
+
+    pub fn auto_scroll(&self) -> bool {
+        self.auto_scroll
+    }
+
+    pub fn auto_mark_fatal_error(&self) -> bool {
+        self.auto_mark_fatal_error
+    }
+
+    pub fn auto_mark_warn(&self) -> bool {
+        self.auto_mark_warn
+    }
+
+    pub fn auto_mark_marker(&self) -> bool {
+        self.auto_mark_marker
+    }
+
+    pub fn update_context_loading_file(&self) -> bool {
+        self.update_context_loading_file
+    }
+
+    pub fn update_contexts_unregister(&self) -> bool {
+        self.update_contexts_unregister
+    }
+
+    pub fn logging_only_mode(&self) -> bool {
+        self.logging_only_mode
+    }
+
+    pub fn split_log_file(&self) -> bool {
+        self.split_log_file
+    }
+
+    pub fn fmax_file_size_mb(&self) -> u16 {
+        self.fmax_file_size_mb
+    }
+
+    pub fn append_date_time(&self) -> bool {
+        self.append_date_time
+    }
+
+    pub fn msg_id_format(&self) -> &str {
+        &self.msg_id_format
+    }
+
+    pub fn set_auto_connect(&mut self, v: bool) {
+        self.auto_connect = v;
+    }
+
+    pub fn set_auto_scroll(&mut self, v: bool) {
+        self.auto_scroll = v;
+    }
+
+    pub fn set_auto_mark_fatal_error(&mut self, v: bool) {
+        self.auto_mark_fatal_error = v;
+    }
+
+    pub fn set_auto_mark_warn(&mut self, v: bool) {
+        self.auto_mark_warn = v;
+    }
+
+    pub fn set_auto_mark_marker(&mut self, v: bool) {
+        self.auto_mark_marker = v;
+    }
+
+    pub fn set_update_context_loading_file(&mut self, v: bool) {
+        self.update_context_loading_file = v;
+    }
+
+    pub fn set_update_contexts_unregister(&mut self, v: bool) {
+        self.update_contexts_unregister = v;
+    }
+
+    pub fn set_logging_only_mode(&mut self, v: bool) {
+        self.logging_only_mode = v;
+    }
+
+    pub fn set_split_log_file(&mut self, v: bool) {
+        self.split_log_file = v;
+    }
+
+    pub fn set_fmax_file_size_mb(&mut self, v: u16) {
+        self.fmax_file_size_mb = v;
+    }
+
+    pub fn set_append_date_time(&mut self, v: bool) {
+        self.append_date_time = v;
+    }
+
+    pub fn set_msg_id_format(&mut self, v: String) {
+        self.msg_id_format = v;
+    }
+
+    pub fn toggle_auto_scroll(&mut self) {
+        self.auto_scroll = !self.auto_scroll;
+    }
+}
+
 #[derive(Debug)]
 pub struct DltSettings {
-    pub table: DltTable,
-    pub other: DltOther,
+    table: DltTable,
+    other: DltOther,
 }
 
 impl Default for DltSettings {
@@ -311,5 +662,27 @@ impl DlpSerde for DltSettings {
             .push(xmltree::XMLNode::Element(xml_other));
 
         xml_settings
+    }
+}
+
+impl DltSettings {
+    pub fn new(table: DltTable, other: DltOther) -> Self {
+        Self { table, other }
+    }
+
+    pub fn table(&self) -> &DltTable {
+        &self.table
+    }
+
+    pub fn other(&self) -> &DltOther {
+        &self.other
+    }
+
+    pub fn table_mut(&mut self) -> &mut DltTable {
+        &mut self.table
+    }
+
+    pub fn other_mut(&mut self) -> &mut DltOther {
+        &mut self.other
     }
 }

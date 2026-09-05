@@ -33,3 +33,25 @@ impl DlpSerde for DltApplication {
         xml_application
     }
 }
+
+impl DltApplication {
+    pub fn new(id: String, description: Option<String>, contexts: Vec<DltContext>) -> Self {
+        Self {
+            id,
+            description,
+            contexts,
+        }
+    }
+
+    pub fn id(&self) -> &str {
+        &self.id
+    }
+
+    pub fn description(&self) -> Option<&str> {
+        self.description.as_deref()
+    }
+
+    pub fn contexts(&self) -> &[DltContext] {
+        &self.contexts
+    }
+}
