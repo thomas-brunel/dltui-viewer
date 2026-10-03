@@ -33,6 +33,10 @@ pub enum Event {
 pub enum AppEvent {
     /// To Open a file.
     OpenFile,
+    /// Switch to the ECUs Viewer mode.
+    EcusViewerMode,
+    /// Switch to the Frames Viewer mode.
+    FrameViewerMode,
     /// Notify an error (Title, Body).
     NotifyError((String, String)),
     /// Quit the application.

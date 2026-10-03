@@ -129,15 +129,13 @@ impl DltFrame {
             return Ok(text_payload);
         } else {
             if let Some(nonvb_payload) = packet.non_verbose_payload() {
-                let payload = match str::from_utf8(nonvb_payload) {
-                    Ok(pld) => pld,
-                    Err(e) => {
-                        return Err(crate::Error::Utf8DecodeError(e));
-                    }
-                };
-                println!("NON-VERBOSE PAYLOAD TEXT: {}", payload);
+                let text_payload = str::from_utf8(nonvb_payload)
+                    .map(|pld| pld.to_string())
+                    .map_err(|e| crate::Error::Utf8DecodeError(e))?;
+                return Ok(text_payload);
             }
         }
+        // Fallback
         Ok("".into())
     }
 

@@ -44,10 +44,8 @@ impl DltProject {
         };
 
         let mut file_data = String::new();
-        match file.read_to_string(&mut file_data) {
-            Ok(nb_read) => println!("Read {} bytes", nb_read),
-            Err(e) => return Err(xmltree::Error::Io(e))?,
-        };
+        file.read_to_string(&mut file_data)
+            .map_err(|e| xmltree::Error::Io(e))?;
 
         let mut xml_dlt_project = xmltree::Element::parse(file_data.as_bytes())?;
 

@@ -10,6 +10,8 @@ use ratatui::DefaultTerminal;
 #[derive(Debug)]
 pub enum AppState {
     Home,
+    EcusViewer,
+    FramesViewer,
     Open(widgets::open_dialog::model::OpenDialog),
     Notification(widgets::notification_dialog::model::NotificationDialog),
     Quit(widgets::confirm_dialog::model::ConfirmDialog),
@@ -20,6 +22,8 @@ pub struct AppContext {
     // dltui_settings: dltui_viewer_core::dltui_settings::DltuiSettings>, // TODO configuration specific of DLTUI-Viewer
     pub dlp: dltui_viewer_dlp::dlt_project::DltProject,
     pub dlt: Option<dltui_viewer_dlt::dlt_file::DltFile>,
+    pub ecus_viewer: widgets::ecus_viewer::model::EcusViewer,
+    pub frames_viewer: widgets::frames_viewer::model::FramesViewer,
 }
 
 /// Application.
@@ -56,7 +60,7 @@ impl App {
     pub fn run(mut self, mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
         while self.running {
             terminal.draw(|frame| {
-                frame.render_widget(&self, frame.area());
+                frame.render_widget(&mut self, frame.area());
                 if let AppState::Open(open_dialog) = &self.state {
                     frame.render_widget(open_dialog, frame.area()); // popup renders on top
                 }
@@ -86,6 +90,29 @@ impl App {
                                 self.handle_open_event(open_event);
                             }
                         }
+                        AppState::EcusViewer => {
+                            if let Some(event) =
+                                self.context.ecus_viewer.handle_key_event(key_event)
+                            {
+                                match event {
+                                    widgets::ecus_viewer::event::EcusViewerEvent::BackHome => {
+                                        self.home()
+                                    }
+                                }
+                            }
+                        }
+                        AppState::FramesViewer => {
+                            if let Some(event) =
+                                self.context.frames_viewer.handle_key_event(key_event)
+                            {
+                                if matches!(
+                                    event,
+                                    widgets::frames_viewer::event::FramesViewerEvent::BackHome
+                                ) {
+                                    self.home();
+                                }
+                            }
+                        }
                         AppState::Notification(notification_dialog) => {
                             if let Some(_notification_event) =
                                 notification_dialog.handle_key_event(key_event)
@@ -113,6 +140,12 @@ impl App {
                 AppEvent::OpenFile => {
                     self.state = AppState::Open(widgets::open_dialog::model::OpenDialog::new());
                 }
+                AppEvent::EcusViewerMode => {
+                    self.state = AppState::EcusViewer;
+                }
+                AppEvent::FrameViewerMode => {
+                    self.state = AppState::FramesViewer;
+                }
                 AppEvent::NotifyError((title, body)) => {
                     self.state = AppState::Notification(
                         widgets::notification_dialog::model::NotificationDialog::new(
@@ -136,16 +169,15 @@ impl App {
     /// Handles the key events and updates the state of [`App`].
     pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
         match key_event.code {
-            KeyCode::Esc | KeyCode::Char('q') => self.events.send(AppEvent::Quit),
+            KeyCode::Esc | KeyCode::Char('q' | 'Q') => self.events.send(AppEvent::Quit),
             KeyCode::Char('c' | 'C') if key_event.modifiers == KeyModifiers::CONTROL => {
                 self.events.send(AppEvent::Quit)
             }
             KeyCode::Char('o' | 'O') => self.events.send(AppEvent::OpenFile),
-            KeyCode::Char('e' | 'E') => {}
-            KeyCode::Char('f' | 'F') => {}
+            KeyCode::Char('e' | 'E') => self.events.send(AppEvent::EcusViewerMode),
+            KeyCode::Char('f' | 'F') => self.events.send(AppEvent::FrameViewerMode),
             KeyCode::Char('a' | 'A') => {
-                self.context.dlp.settings.other.auto_scroll =
-                    !self.context.dlp.settings.other.auto_scroll;
+                self.context.dlp.settings.other_mut().toggle_auto_scroll();
             }
             KeyCode::Char('s' | 'S') => {}
             KeyCode::Char('c' | 'C') => {}
@@ -176,7 +208,6 @@ impl App {
     fn handle_open_event(&mut self, event: widgets::open_dialog::event::OpenDialogEvent) {
         use widgets::open_dialog::event::OpenDialogEvent;
         match event {
-            // TODO: hand `kind`/`path` off to the actual .dlp/.dlt loader once wired up.
             OpenDialogEvent::FileChosen(kind, path) => {
                 match kind {
                     widgets::open_dialog::model::FileKind::Dlp => {
